@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short URL Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">URL Shortener</h1>
+        <div class="space-y-4">
+            <input type="url" id="longUrl" placeholder="Tempel link shopee atau link panjang..." 
+                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="generateLink()" 
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Generate Link
+            </button>
+        </div>
+
+        <div id="result" class="mt-6 hidden">
+            <p class="text-sm text-gray-600">Hasil URL:</p>
+            <div class="flex items-center mt-2">
+                <input type="text" id="shortUrl" readonly 
+                    class="w-full p-2 bg-gray-50 border rounded-l-lg text-blue-600 font-medium">
+                <button onclick="copyLink()" class="bg-gray-200 px-4 py-2 rounded-r-lg hover:bg-gray-300">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function generateLink() {
+            const longUrl = document.getElementById('longUrl').value;
+            if (!longUrl) return alert("Isi URL dulu!");
+
+            const res = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ longUrl })
+            });
+
+            const data = await res.json();
+            const fullShortUrl = window.location.origin + '/' + data.shortId;
+            
+            document.getElementById('shortUrl').value = fullShortUrl;
+            document.getElementById('result').classList.remove('hidden');
+        }
+
+        function copyLink() {
+            const copyText = document.getElementById("shortUrl");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Link disalin!");
+        }
+    </script>
+</body>
+</html>
